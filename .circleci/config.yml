@@ -49,10 +49,10 @@ jobs:
       - run:
           name: Build, tag and push docker image to docker.io
           command: |
-            docker build --tag capstoneproject:${CIRCLE_WORKFLOW_ID:0:7} .
+            docker build --tag capstoneproject:v2 .
             docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}
-            docker tag capstoneproject:${CIRCLE_WORKFLOW_ID:0:7} elshadrzayev/capstoneproject:${CIRCLE_WORKFLOW_ID:0:7}
-            docker push elshadrzayev/capstoneproject:${CIRCLE_WORKFLOW_ID:0:7}
+            docker tag capstoneproject:v2 elshadrzayev/capstoneproject:v2
+            docker push elshadrzayev/capstoneproject:v2
 
   create-small-cluster:
     executor: aws-eks/python3
@@ -126,6 +126,36 @@ jobs:
             kubectl get pods
             kubectl get deployment
 
+  delete-cluster:
+    executor: aws-eks/python3
+    parameters:
+      cluster-name:
+        description: |
+          capstoneproject
+        type: string
+    steps:
+      - checkout
+      - aws-eks/install-aws-iam-authenticator:
+          release-tag: ""
+      - run:
+          name: Install the eksctl tool
+          command: |
+            if which eksctl > /dev/null; then
+            echo "eksctl is already installed"
+            exit 0
+            fi
+            mkdir -p eksctl_download
+            curl --silent --location --retry 5 "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C eksctl_download
+            chmod +x eksctl_download/eksctl
+            SUDO=""
+            if [ $(id -u) -ne 0 ] && which sudo > /dev/null ; then
+            SUDO="sudo"
+            fi
+            $SUDO mv eksctl_download/eksctl /usr/local/bin/
+            rmdir eksctl_download
+      - aws-eks/delete-cluster:
+          cluster-name: << parameters.cluster-name >>
+
 workflows:
   capstoneproj:
     jobs:
@@ -138,8 +168,19 @@ workflows:
       # - create-deployment:
       #     cluster-name: capstoneproject
 
-      - test-deployment:
-          cluster-name: capstoneproject
+      # - test-deployment:
+      #     cluster-name: capstoneproject
+
+      - aws-eks/update-container-image:
+          cluster-name: eks-demo-deployment
+          container-image-updates: "capstoneproject=elshadrzayev/capstoneproject:a542e60"
+          record: true
+          # requires:
+          #   - create-deployment
+          resource-name: deployment/capstoneproject
+
+      # - delete-cluster:
+      #     cluster-name: capstoneproject
 
       # - aws-eks/create-cluster:
       #     cluster-name: capstoneproject
