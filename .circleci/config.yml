@@ -159,29 +159,30 @@ jobs:
 workflows:
   capstoneproject:
     jobs:
-      - lint
-      - build:
-          requires:
-            - lint
-      - create-small-cluster:
-          cluster-name: capstoneproject
-          requires:
-            - build
-      - create-deployment:
-          cluster-name: capstoneproject
-          requires:
-            - create-small-cluster
-      - test-deployment:
-          cluster-name: capstoneproject
-          requires:
-            - create-deployment
-      - aws-eks/update-container-image:
-          cluster-name: capstoneproject
-          container-image-updates: "capstoneproject=elshadrzayev/capstoneproject:v2"
-          record: true
-          requires:
-            - create-deployment
-          resource-name: deployment/capstoneproject
-      # - delete-cluster:
+      # - lint
+      # - build:
+      #     requires:
+      #       - lint
+      # - create-small-cluster:
       #     cluster-name: capstoneproject
-      #       requires: [aws-eks/update-container-image, test-deployment]
+      #     requires:
+      #       - build
+      # - create-deployment:
+      #     cluster-name: capstoneproject
+      #     requires:
+      #       - create-small-cluster
+      # - test-deployment:
+      #     cluster-name: capstoneproject
+      #     requires:
+      #       - create-deployment
+      # - aws-eks/update-container-image:
+      #     cluster-name: capstoneproject
+      #     container-image-updates: "capstoneproject=elshadrzayev/capstoneproject:v2"
+      #     record: true
+      #     requires:
+      #       - create-deployment
+      #     resource-name: deployment/capstoneproject
+      - delete-cluster:
+          cluster-name:
+            capstoneproject
+            # requires: [aws-eks/update-container-image, test-deployment]
