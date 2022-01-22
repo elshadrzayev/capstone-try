@@ -171,16 +171,16 @@ workflows:
       # - test-deployment:
       #     cluster-name: capstoneproject
 
-      - aws-eks/update-container-image:
-          cluster-name: capstoneproject
-          container-image-updates: "capstoneproject=elshadrzayev/capstoneproject:a542e60"
-          record: true
-          # requires:
-          #   - create-deployment
-          resource-name: deployment/capstoneproject
-
-      # - delete-cluster:
+      # - aws-eks/update-container-image:
       #     cluster-name: capstoneproject
+      #     container-image-updates: "capstoneproject=elshadrzayev/capstoneproject:a542e60"
+      #     record: true
+      #     requires:
+      #       - create-deployment
+      #     resource-name: deployment/capstoneproject
+
+      - delete-cluster:
+          cluster-name: capstoneproject
 
       # - aws-eks/create-cluster:
       #     cluster-name: capstoneproject
