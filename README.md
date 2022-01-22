@@ -4,27 +4,24 @@
 
 ## Project Overview
 
-This is the Capstone project in Udacity Cloud Devops Enginner nanodegree to demonstrate implemnting docker image and kubernetes using CircleCi pipeline. In this project Circleci orbs has been used
-  - circleci/kubernetes@0.11.2
-  - circleci/aws-eks@1.0.3
+udacity-capstone-project
+In this project I applied the skills I learnt in the past couple of months from the Udacity Cloud Devops Engineer nanodegree. These include:
 
----
+Working in AWS
+Using Jenkins or Circle CI to implement Continuous Integration and Continuous Deployment
+Building pipelines
+Working with Ansible and CloudFormation to deploy clusters
+Building Kubernetes clusters
+Building Docker containers in pipelines
 
-## Setup the Environment
+Setup the Environment
+Create Dockerfile, makefile, requirements.txt
+create python virtualenv & source it:
+Then run make install
+Set up project in CircleCi
+Create deployment.yml
 
-* Create a virtualenv and activate it
-   ```
-   python3 -m venv virtualenv
-   . virtualenv/bin/activate
-   ```
-* Run `make install` to install the necessary dependencies
-  ```
-  pip install --upgrade pip &&\
-	pip install -r requirements.txt &&\
-	sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 &&\
-	sudo chmod +x /bin/hadolint
-  ```
-  
- ## References
- - https://circleci.com/developer/orbs/orb/circleci/kubernetes
- - https://circleci.com/developer/orbs/orb/circleci/aws-eks
+Deploy the application in Amazon EKS
+Create cluster using eksctl
+Deploy cluster
+Test cluster
