@@ -21,7 +21,7 @@ spec:
         app: capstoneproject
     spec:
       containers:
-        - image: elshadrzayev/capstoneproject:a542e60
+        - image: elshadrzayev/capstoneproject:v2
           imagePullPolicy: Always
           name: capstoneproject
           ports:

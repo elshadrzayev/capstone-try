@@ -157,42 +157,32 @@ jobs:
           cluster-name: << parameters.cluster-name >>
 
 workflows:
-  capstoneproj:
+  capstoneproject:
     jobs:
-      # - lint
-      # - build:
-      #     requires:
-      #       - lint
-      # - create-small-cluster:
-      #     cluster-name: capstoneproject
-      # - create-deployment:
-      #     cluster-name: capstoneproject
-
-      # - test-deployment:
-      #     cluster-name: capstoneproject
-
-      # - aws-eks/update-container-image:
-      #     cluster-name: capstoneproject
-      #     container-image-updates: "capstoneproject=elshadrzayev/capstoneproject:a542e60"
-      #     record: true
-      #     requires:
-      #       - create-deployment
-      #     resource-name: deployment/capstoneproject
-
-      - delete-cluster:
+      - lint
+      - build:
+          requires:
+            - lint
+      - create-small-cluster:
           cluster-name: capstoneproject
+            requires:
+              - build
+      - create-deployment:
+          cluster-name: capstoneproject
+            requires:
+              - create-small-cluster
+      - test-deployment:
+          cluster-name: capstoneproject
+            requires:
+              - create-deployment
+      - aws-eks/update-container-image:
+          cluster-name: capstoneproject
+          container-image-updates: "capstoneproject=elshadrzayev/capstoneproject:v2"
+          record: true
+          requires:
+            - create-deployment
+          resource-name: deployment/capstoneproject
+      # - delete-cluster:
+      #     cluster-name: capstoneproject
+      #       requires: [aws-eks/update-container-image, test-deployment]
 
-      # - aws-eks/create-cluster:
-      #     cluster-name: capstoneproject
-      # - create-deployment:
-      #     cluster-name: capstoneproject
-      #     requires:
-      #       - aws-eks/create-cluster
-      # - test-cluster:
-      #     cluster-name: capstoneproject
-      #     requires:
-      #       - create-deployment
-      # - aws-eks/delete-cluster:
-      #     cluster-name: capstoneproject
-      #     requires:
-      #       - test-cluster
