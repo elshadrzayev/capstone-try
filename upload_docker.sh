@@ -11,7 +11,7 @@ dockerpath=elshadrzayev/capstoneproject
 # Authenticate & tag
 echo "Docker ID and Image: $dockerpath"
 docker login
-docker tag capstoneproject:latest elshadrzayev/capstoneproject:latest
+docker tag capstoneproject:latest $dockerpath:latest
 
 # Step 3:
 docker push elshadrzayev/capstoneproject:latest

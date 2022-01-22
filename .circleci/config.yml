@@ -1,9 +1,10 @@
 version: 2.1
 
 orbs:
-  aws-eks: circleci/aws-eks@1.0.3
-  aws-cli: circleci/aws-cli@1.4.0
-  kubernetes: circleci/kubernetes@0.11.2
+  aws-cli: circleci/aws-cli@2.0.3
+  kubernetes: circleci/kubernetes@0.4.0
+  aws-eks: circleci/aws-eks@0.2.3
+  docker: circleci/docker@2.0.1
 
 executors:
   python:
@@ -25,12 +26,12 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            python3 -m venv venv
-            . venv/bin/activate
+            python3 -m venv devops
+            . devops/bin/activate
             make install
             # Install hadolint
-            sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 &&\
-            sudo chmod +x /bin/hadolint
+            # sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 &&\
+            # sudo chmod +x /bin/hadolint
       - save_cache:
           paths:
             - ./venv
@@ -38,7 +39,7 @@ jobs:
       - run:
           name: run lint
           command: |
-            . venv/bin/activate
+            . devops/bin/activate
             make lint
 
   build:
@@ -50,9 +51,9 @@ jobs:
           name: Build, tag and push docker image to docker.io
           command: |
             docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
-            docker build --tag capstoneproject-${CIRCLE_WORKFLOW_ID:0:7} .
-            docker tag capstoneproject-${CIRCLE_WORKFLOW_ID:0:7} elshadrzayev/capstoneproject-${CIRCLE_WORKFLOW_ID:0:7}:latest
-            docker push capstoneproject-${CIRCLE_WORKFLOW_ID:0:7}:latest
+            docker build --tag capstoneproject:${CIRCLE_WORKFLOW_ID:0:7} .
+            docker tag capstoneproject:${CIRCLE_WORKFLOW_ID:0:7} elshadrzayev/capstoneproject:${CIRCLE_WORKFLOW_ID:0:7}
+            docker push elshadrzayev/capstoneproject:${CIRCLE_WORKFLOW_ID:0:7}
 
   create-deployment:
     executor: aws-eks/python3
@@ -94,20 +95,20 @@ workflows:
   capstoneproj:
     jobs:
       - lint
-      - build:
-          requires:
-            - lint
-      - aws-eks/create-cluster:
-          cluster-name: capstoneproject
-      - create-deployment:
-          cluster-name: capstoneproject
-          requires:
-            - aws-eks/create-cluster
-      - test-cluster:
-          cluster-name: capstoneproject
-          requires:
-            - create-deployment
-      - aws-eks/delete-cluster:
-          cluster-name: capstoneproject
-          requires:
-            - test-cluster
+      # - build:
+      #     requires:
+      #       - lint
+      # - aws-eks/create-cluster:
+      #     cluster-name: capstoneproject
+      # - create-deployment:
+      #     cluster-name: capstoneproject
+      #     requires:
+      #       - aws-eks/create-cluster
+      # - test-cluster:
+      #     cluster-name: capstoneproject
+      #     requires:
+      #       - create-deployment
+      # - aws-eks/delete-cluster:
+      #     cluster-name: capstoneproject
+      #     requires:
+      #       - test-cluster
