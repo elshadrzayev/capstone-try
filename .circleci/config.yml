@@ -95,18 +95,17 @@ jobs:
     parameters:
       cluster-name:
         description: |
-          Name of the deployment
+          Name of the EKS cluster
         type: string
     steps:
       - checkout
-      - kubernetes/install
       - aws-eks/update-kubeconfig-with-authenticator:
           cluster-name: << parameters.cluster-name >>
           install-kubectl: true
       - kubernetes/create-or-update-resource:
           get-rollout-status: true
           resource-file-path: deployment.yml
-          resource-name: deployment/capstoneproject
+          resource-name: deployment/capstone
 
   test-cluster:
     executor: aws-eks/python3
@@ -133,8 +132,11 @@ workflows:
       # - build:
       #     requires:
       #       - lint
-      - create-small-cluster:
+      # - create-small-cluster:
+      #     cluster-name: capstoneproject
+      - create-deployment:
           cluster-name: capstoneproject
+
       # - aws-eks/create-cluster:
       #     cluster-name: capstoneproject
       # - create-deployment:
