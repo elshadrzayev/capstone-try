@@ -172,7 +172,7 @@ workflows:
       #     cluster-name: capstoneproject
 
       - aws-eks/update-container-image:
-          cluster-name: eks-demo-deployment
+          cluster-name: capstoneproject
           container-image-updates: "capstoneproject=elshadrzayev/capstoneproject:a542e60"
           record: true
           # requires:
