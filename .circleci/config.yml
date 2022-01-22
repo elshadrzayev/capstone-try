@@ -50,8 +50,8 @@ jobs:
       - run:
           name: Build, tag and push docker image to docker.io
           command: |
-            docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
             docker build --tag capstoneproject:${CIRCLE_WORKFLOW_ID:0:7} .
+            docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}
             docker tag capstoneproject:${CIRCLE_WORKFLOW_ID:0:7} elshadrzayev/capstoneproject:${CIRCLE_WORKFLOW_ID:0:7}
             docker push elshadrzayev/capstoneproject:${CIRCLE_WORKFLOW_ID:0:7}
 
@@ -95,9 +95,9 @@ workflows:
   capstoneproj:
     jobs:
       - lint
-      # - build:
-      #     requires:
-      #       - lint
+      - build:
+          requires:
+            - lint
       # - aws-eks/create-cluster:
       #     cluster-name: capstoneproject
       # - create-deployment:
