@@ -159,7 +159,7 @@ jobs:
 workflows:
   capstoneproject:
     jobs:
-      # - lint
+      - lint
       # - build:
       #     requires:
       #       - lint
@@ -182,7 +182,7 @@ workflows:
       #     requires:
       #       - create-deployment
       #     resource-name: deployment/capstoneproject
-      - delete-cluster:
-          cluster-name:
-            capstoneproject
-            # requires: [aws-eks/update-container-image, test-deployment]
+      # - delete-cluster:
+      #     cluster-name:
+      #       capstoneproject
+      # requires: [aws-eks/update-container-image, test-deployment]
